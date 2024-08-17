@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+  provider = "postgresql"
+  url      =env("DATABASE_URL")
+
+   
+}
+
+model User {
+   id             String      @id @default(uuid())
+  name           String?
+  email          String      @unique
+
+  image          String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  bio            String?
+  profileView    Int         @default(0)
+  courses        Course[]
+  wnerConversations      Conversation[] @relation("ownerConversations")
+  recipientConversations  Conversation[] @relation("recipientConversations")
+  messages                Message[]
+  location       String?
+  skills         String[]
+  preferences    String[]
+  followersCount Int         @default(0)
+  followingCount Int         @default(0)
+  lastLogin      DateTime?
+  reputation     Float       @default(0.0)
+  isVerified     Boolean     @default(false)
+  notifications  Notification[]
+  
+  socialLinks    Json?
+
+}
+
+model Course {
+  id           String       @id @default(uuid())
+  ownerId   String
+  courseTitle   String
+  courseDescription String
+  category String  @default("all")
+  viewCount Int @default(0)
+  rentalDuration String
+  rentalPrice      Float
+  courseImage String
+  courseUrl    String  
+  active Boolean @default(true) 
+  language String @default("hindi") 
+  courseType String @default("self-paced")
+  isLive     Boolean @default(false)
+  
+  user               User    @relation(fields: [ownerId], references: [id])
+
+}
+
+
+model Conversation {
+  id           String     @id @default(uuid())
+  ownerId      String
+  recipientId  String
+  owner        User      @relation("ownerConversations", fields: [ownerId], references: [id])
+  recipient    User      @relation("recipientConversations", fields: [recipientId], references: [id])
+  messages     Message[]
+  unseenCount Int   @default(0)
+  
+  createdAt    DateTime  @default(now())
+}
+
+model Message {
+  id              Int          @id @default(autoincrement())
+  conversationId  String
+  senderId        String
+  content         String
+  createdAt       DateTime     @default(now())
+  isSeen          Boolean      @default(false)
+  conversation    Conversation @relation(fields: [conversationId], references: [id])
+  sender          User         @relation(fields: [senderId], references: [id])
+
+  @@index([conversationId, createdAt]) // For efficient querying of messages in a conversation
+}
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+  type        String
+  content     String
+  recipient   User      @relation(fields: [recipientId], references: [id])
+  recipientId String
+
+    
+
+ 
+  createdAt   DateTime  @default(now())
+}
+
+
+model Messanger {
+ id            String       @id @default(uuid())
+  text         String
+}
+

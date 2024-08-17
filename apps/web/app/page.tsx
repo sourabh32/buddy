@@ -1,99 +1,66 @@
 import Image from "next/image";
 import { Button } from "@repo/ui/button";
 import styles from "./page.module.css";
+import {PrismaClient} from "@prisma/client"
 
-export default function Home() {
+
+export default async function Home() {
+  const pri = new PrismaClient()
+  const users = await pri.user.findMany()
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen bg-primary">
+    {/* Hero Section */}
+    <section className="hero min-h-screen bg-primary text-primary-content flex flex-col justify-center items-center space-y-4">
+  <h1 className="text-primary">Primary: #1DA1F2</h1>
+  <h1 className="text-primary-focus">Primary Focus: #1A91DA</h1>
+  <h1 className="text-secondary">Secondary: #15202B</h1>
+  <h1 className="text-secondary-focus">Secondary Focus: #1C2733</h1>
+  <h1 className="text-accent">Accent: #17BF63</h1>
+  <h1 className="text-accent-focus">Accent Focus: #16A15D</h1>
+  <h1 className="text-neutral">Neutral: #38444D</h1>
+  <h1 className="text-neutral-focus">Neutral Focus: #2C3E50</h1>
+  <h1 className="text-info">Info: #1DA1F2</h1>
+  <h1 className="text-success">Success: #17BF63</h1>
+  <h1 className="text-warning">Warning: #FFAD1F</h1>
+  <h1 className="text-error">Error: #E0245E</h1>
+</section>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+
+    {/* Benefits Section */}
+    <section className="py-12 bg-base-100">
+      <div className="container mx-auto text-center">
+        <h2 className="text-4xl font-bold mb-6">Why Exchange Courses?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="card bg-base-200 shadow-lg">
+            <div className="card-body">
+              <h3 className="text-xl font-semibold">Expand Your Knowledge</h3>
+              <p>Gain access to a diverse range of courses without spending a dime. Learn from different perspectives and expertise.</p>
+            </div>
+          </div>
+          <div className="card bg-base-200 shadow-lg">
+            <div className="card-body">
+              <h3 className="text-xl font-semibold">Cost-Effective Learning</h3>
+              <p>Save money by exchanging courses instead of purchasing new ones. Enjoy high-quality education at no extra cost.</p>
+            </div>
+          </div>
+          <div className="card bg-base-200 shadow-lg">
+            <div className="card-body">
+              <h3 className="text-xl font-semibold">Flexible and Convenient</h3>
+              <p>Exchange courses with ease and access them anytime, anywhere. Fit learning into your schedule without hassle.</p>
+            </div>
+          </div>
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file-text.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </section>
+
+    {/* CTA Section */}
+    <section className="py-12 bg-primary text-primary-content">
+      <div className="container mx-auto text-center">
+        <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>
+        <p className="mb-6">Join our community today and start exchanging courses with fellow learners. The path to knowledge starts here!</p>
+        <button className="btn btn-secondary">Join Now</button>
+      </div>
+    </section>
+  </div>
   );
 }
