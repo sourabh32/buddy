@@ -1,12 +1,15 @@
 
 import { Eye, ViewIcon } from "lucide-react"
-import { fetchCourseById,fetchCourses } from "../../../actions/course.action" 
-import CreateChat from "../../../components/chat/CreateChat"
+import { fetchCourseById,fetchCourses } from "../../../../actions/course.action"
+import CreateChat from "../../../../components/chat/CreateChat"
 import Link from "next/link"
-import CourseCard from "../../../components/course/CourseCard"
+import CourseCard from "../../../../components/course/CourseCard"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../../../../lib/auth"
 const page = async ({params}:{params:any}) => {
   const course = await fetchCourseById({id:params.id})
   console.log(course)
+  const session = await getServerSession(authOptions)
   const courses = await fetchCourses({category:"all"})
   console.log(courses)
   return (
@@ -44,10 +47,19 @@ const page = async ({params}:{params:any}) => {
                 {course.language}
               </div>
             </div>
-            <CreateChat recipientId={course.ownerId} />
-          </div>
+              <div className={'flex gap-5'}>
+
+                {
+                  session?.user?.id === course.ownerId ? (<></>) : (<CreateChat recipientId={course.ownerId}/>)
+                }
+                <button className={'btn fit-content btn-secondary '}>official course page</button>
+
+              </div>
+
 
             </div>
+
+          </div>
            
         
           {/* Course Details */}

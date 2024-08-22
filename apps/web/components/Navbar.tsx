@@ -2,6 +2,7 @@
 import { Menu, User, Bell, LogOut, LogIn, Handshake } from 'lucide-react'; // Import Lucide icons
 import Image from 'next/image';
 import NavLink from './navbar/NavLink';
+import AuthButton from "./auth/AuthButton";
 
 
 
@@ -49,19 +50,15 @@ const Navbar = ({ session }) => {
                   </a>
                 </li>
                 <li>
-                  <a className="flex items-center">
-                    <LogOut className="w-5 h-5 mr-2" />
-                    Sign out
-                  </a>
+                    <AuthButton
+                        type={"logout"} text={"log out"} />
                 </li>
               </ul>
             </div>
           </div>
         ) : (
-          <button className="btn btn-primary">
-            <LogIn className="w-5 h-5 mr-2" />
-            Sign in
-          </button>
+          <AuthButton
+              type={"login"} text={"sign in"} />
         )}
       </div>
 

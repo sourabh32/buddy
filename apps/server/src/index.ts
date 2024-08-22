@@ -2,7 +2,7 @@ import http from "http"
 import SocketService from "./services/socket"
 import { startMessageConsumer } from "./services/kafka"
 async function init(){
-    startMessageConsumer()
+     await startMessageConsumer()
     const socketService = new SocketService()
     const httpServer = http.createServer()
     socketService.io.attach(httpServer)
@@ -15,7 +15,7 @@ async function init(){
 
 }
 
-// "dev": "tsc-watch --onSuccess \"node dist/index.js\"",
+
 
 
 init()

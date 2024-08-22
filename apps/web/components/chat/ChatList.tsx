@@ -18,12 +18,14 @@ import { useState } from "react";
   // ];
   
     return (
-      <div className="w-1/3 bg-primary border-r border-gray-300 p-4 overflow-y-auto">
+      <div className="w-1/3 bg-base-100 border-r p-4 overflow-y-auto">
       
        
         {
           conversations?.length>0 && conversations.map((conversation) => (
-            <ChatListItem key={conversation.id} id={conversation.id} name={ conversation?.recipient?.id !== session?.user?.id ? conversation?.recipient?.name : conversation?.owner?.name } image={ conversation?.recipient?.id !== session?.user?.id ? conversation?.recipient?.image : conversation?.owner?.image} unseenCount={conversation.unseenCount}/>
+              <ChatListItem key={conversation.id} conversation={conversation} />
+
+            // <ChatListItem key={conversation.id} id={conversation.id} name={ conversation?.recipient?.id !== session?.user?.id ? conversation?.recipient?.name : conversation?.owner?.name } image={ conversation?.recipient?.id !== session?.user?.id ? conversation?.recipient?.image : conversation?.owner?.image} unseenCount={conversation.unseenCount}/>
           ))
         
           }
@@ -33,3 +35,10 @@ import { useState } from "react";
   };
 
   export default ChatList
+
+
+
+
+
+
+

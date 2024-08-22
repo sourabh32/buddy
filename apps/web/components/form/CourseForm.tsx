@@ -156,14 +156,25 @@ const CourseForm = ({formik,actionType}) => {
       />
 </div>
 
-      
-     
-      <div className="flex justify-end">
-      <button type="submit"  className="btn flex btn-sm   btn-primary btn-solid">{actionType === 'create' ?(<span className='flex items-center gap-2'>Save <Save /></span>):(<span className='flex items-center gap-2'>update <UploadCloud /></span>)}</button>
-      </div>
-      
+
+        <div className="flex justify-end">
+            <button
+                type="submit"
+                className="btn flex btn-sm btn-primary btn-solid"
+                disabled={formik.isSubmitting}
+            >
+                {formik.isSubmitting ? (
+                    <span>Loading...</span>
+                ) : (
+                    <span>{actionType === 'create' ? 'Create' : 'Update'}</span>
+                )}
+            </button>
+          {/*    <span className='flex items-center gap-2'>Save <Save/></span>) : (*/}
+            {/*    <span className='flex items-center gap-2'>update <UploadCloud/></span>)}</button>*/}
+        </div>
+
     </form>
-  </div>
+    </div>
   )
 }
 

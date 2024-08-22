@@ -3,10 +3,14 @@
 import { useFormik } from 'formik';
 import React from 'react';
 import * as Yup from "yup";
-import CourseForm from "../../../components/form/CourseForm"
+import CourseForm from "../../../../components/form/CourseForm"
+import { createCourse } from '../../../../actions/course.action';
+import { useRouter } from 'next/navigation';
 
 
 const Page = () => {
+
+  const router = useRouter()
   const formik = useFormik({
     initialValues: {
       courseImage: "",
@@ -33,12 +37,14 @@ const Page = () => {
       courseType: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
-    //   await createCourse({...values})
+       const courseId = await createCourse({formData:{...values,rentalPrice:parseFloat(values.rentalPrice)}})
+      router.push(`/courses/${courseId}`)
       console.log(values);
     },
     validateOnChange: false,
     validateOnBlur: false,
   });
+  
 
   return (
     <div className="p-2  ">

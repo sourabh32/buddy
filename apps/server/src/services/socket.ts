@@ -2,34 +2,25 @@ import Redis from "ioredis";
 import { Server, Socket } from "socket.io";
 import { produceMessage } from "./kafka";
 
-
 const pub = new Redis({
-  host: process.env.REDIS_HOST || "", // Redis host (e.g., "127.0.0.1")
-  port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 8000, // Redis port (e.g., 6379)
-  username: process.env.REDIS_USER || undefined, // Redis username (if applicable)
-  password: process.env.REDIS_PASSWORD || undefined, // Redis password (if applicable)
+  host: process.env.REDIS_HOST || "127.0.0.1",
+  port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 6379,
+  username: process.env.REDIS_USER || undefined,
+  password: process.env.REDIS_PASSWORD || undefined,
+
 });
+
 const sub = new Redis({
-  host: process.env.REDIS_HOST || "", // Redis host (e.g., "127.0.0.1")
-  port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 8000, // Redis port (e.g., 6379)
-  username: process.env.REDIS_USER || undefined, // Redis username (if applicable)
-  password: process.env.REDIS_PASSWORD || undefined, // Redis password (if applicable)
+  host: process.env.REDIS_HOST || "127.0.0.1",
+  port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 6379,
+  username: process.env.REDIS_USER || undefined,
+  password: process.env.REDIS_PASSWORD || undefined,
 });
-
-
-
-
-
-
-
-
-
 
 class SocketService {
   private _io: Server;
 
   constructor() {
-    console.log("Init Socket Service...");
     this._io = new Server({
       cors: {
         allowedHeaders: ["*"],
@@ -41,23 +32,44 @@ class SocketService {
 
   public initListeners() {
     const io = this.io;
-    console.log("Init Socket Listeners...");
 
-    io.on("connect", (socket) => {
-      console.log(`New Socket Connected`, socket.id);
-      socket.on("event:message", async ({ message }: { message: string }) => {
-        console.log("New Message Rec.", message);
-        // publish this message to redis
-        await pub.publish("MESSAGES", JSON.stringify({ message }));
+    io.on("connect", (socket: Socket) => {
+      console.log("scoket connected",socket.id)
+      socket.on("event:join", async ({ conversationId,userId }: { conversationId: string,userId:string }) => {
+        console.log(socket.id,"joined",conversationId)
+        socket.join(conversationId);
+        await pub.publish("MESSAGES", JSON.stringify({ event: "join", conversationId, userId }));
       });
+
+      socket.on("event:message", async ({ conversationId, message,senderId }: { conversationId: string; message: string ,senderId:string}) => {
+        await pub.publish("MESSAGES", JSON.stringify({ event: "message",senderId, conversationId, message }));
+        // io.to(conversationId).emit("message", {  senderId, message,big:"jello" });
+      });
+      socket.on("event:read",async ({messageId}:{messageId:string}) => {
+
+        await pub.publish("MESSAGES", JSON.stringify({ event: "read",messageId }));
+      })
     });
 
-    sub.on("message", async (channel, message) => {
+    sub.on("message", async (channel: string, message: string) => {
+      console.log("movment")
       if (channel === "MESSAGES") {
-        console.log("new message from redis", message);
-        io.emit("message", message);
-        await produceMessage(message);
-        console.log("Message Produced to Kafka Broker");
+        const parsedMessage = JSON.parse(message);
+
+        if (parsedMessage.event === "join") {
+          io.to(parsedMessage.conversationId).emit("userJoined", parsedMessage.userId);
+        }
+
+        if (parsedMessage.event === "read") {
+
+          await produceMessage(parsedMessage);
+        }
+
+        if (parsedMessage.event === "message") {
+          console.log(parsedMessage)
+          io.to(parsedMessage.conversationId).emit("message", { senderId: parsedMessage.senderId, content: parsedMessage.message});
+          await produceMessage(parsedMessage);
+        }
       }
     });
   }

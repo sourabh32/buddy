@@ -9,9 +9,7 @@
   "author": "",
   "license": "ISC",
   "description": "",
-
   "dependencies": {
     "@prisma/client": "^5.18.0"
   }
- 
 }

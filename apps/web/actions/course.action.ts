@@ -5,7 +5,7 @@ import { authOptions } from "../lib/auth";
 import { Course, Session } from "../types";
  export async function createCourse({formData}:{formData:Course}) {
   const session: Session | null = await getServerSession(authOptions);
-
+console.log(formData)
   if (!session ||!session.user) {
     throw new Error("User must be authenticated to create a course");
   }
@@ -24,13 +24,13 @@ import { Course, Session } from "../types";
           courseTitle: formData.courseTitle,
           courseDescription: formData.courseDescription,
           rentalDuration: formData.rentalDuration,
-          rentalPrice: formData.rentalPrice, 
+          rentalPrice:formData.rentalPrice, 
           courseImage: formData.courseImage,
           courseUrl: formData.courseUrl,
         },
       });
       console.log(newCourse)
-      return newCourse;
+      return newCourse.id;
     } catch (error) {
       console.error('Error creating course:', error);
       throw error;

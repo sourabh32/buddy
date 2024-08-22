@@ -6,15 +6,19 @@ import { SocketProvider } from "./SocketProvider";
 export const Providers = ({children}: {children: React.ReactNode}) => {
     return (
 
-    
-        <SocketProvider>
 
-      
+
+
+
         <SessionProvider>
+            <SocketProvider>
 
             {children}
+            </SocketProvider>
         </SessionProvider>
-        </SocketProvider>
+
+
+
     )
    
 }

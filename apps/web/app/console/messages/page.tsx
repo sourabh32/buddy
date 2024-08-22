@@ -24,17 +24,18 @@ const page = () => {
   return (
     <div className="max-w-md mx-auto p-4">
     <div className="space-y-4">
+      select chat to start
       {/* Chat Messages List */}
-      <ul className="list-none space-y-2">
+      {/* <ul className="list-none space-y-2">
         { messages.length>0 && messages.map((msg) => (
           <li key={msg} className="bg-gray-200 rounded-lg p-2">
             {msg}
           </li>
         ))}
-      </ul>
+      </ul> */}
 
       {/* Chat Input */}
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <input
           type="text"
           value={message}
@@ -48,7 +49,7 @@ const page = () => {
         >
           Send
         </button>
-      </div>
+      </div> */}
     </div>
   </div>
   )

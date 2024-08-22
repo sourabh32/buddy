@@ -1,9 +1,9 @@
 
 import React from 'react';
 
-import { fetchCourses } from '../../actions/course.action';
+import { fetchCourses } from '../../../actions/course.action';
 
-import CoursesPage from '../../components/pages/CoursePage';
+import CoursesPage from '../../../components/pages/CoursePage';
 // import prisma from '../../prisma/prisma';
 // import { fetchCourses } from '../../actions/course.actions';
 
